@@ -24,7 +24,8 @@ import javax.xml.datatype.Duration;
 
 import com.conwet.samson.jaxb.ContextElement;
 import com.conwet.samson.jaxb.ContextRegistration;
-import com.conwet.samson.jaxb.ContextResponse;
+import com.conwet.samson.jaxb.UpdateContextResponse;
+import com.conwet.samson.jaxb.QueryContextResponse;
 import com.conwet.samson.jaxb.EntityId;
 import com.conwet.samson.jaxb.NotifyConditionType;
 import com.conwet.samson.jaxb.RegisterContextResponse;
@@ -57,7 +58,7 @@ public interface QueryBroker {
 	 * @return the {@linkplain ContextResponse} returned by the context broker
 	 * @throws Exception if some errors occur when decoding the response
 	 */
-	public ContextResponse queryContext(EntityId entityId) throws Exception;
+	public QueryContextResponse queryContext(EntityId entityId) throws Exception;
 	
 	/**
 	 * Returns the {@linkplain ContextResponse} for the register operation.
@@ -77,7 +78,7 @@ public interface QueryBroker {
 	 * @return the contextResponse received from context broker
 	 * @throws Exception if some errors occur when decoding the response
 	 */
-	public ContextResponse updateContext(ContextElement cxtElem, UpdateActionType action) throws Exception;
+	public UpdateContextResponse updateContext(ContextElement cxtElem, UpdateActionType action) throws Exception;
 	
 	/**
 	 * Returns the {@linkplain SubscribeResponse} for the subscription operation.
