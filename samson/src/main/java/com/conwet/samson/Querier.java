@@ -94,6 +94,32 @@ public class Querier implements QueryBroker {
 		this.url = "http://" + host + ":" + port;
 		this.factory = new ObjectFactory();
 	}
+        
+        /**
+	 * Construct a {@linkplain Querier} object to query the context broker
+	 * at the specified address.
+	 * 
+	 * @param host the hostname where the context broker is running
+	 * @param port the port used by the context broker, must be greater than zero
+         * @param path the path to the context broker
+	 */
+        Querier(String host, int port, String path) {
+            
+            Objects.requireNonNull(host, "Hostname is null");
+            
+            if (port <= 0) {
+
+		throw new IllegalArgumentException("port must be positive: port=" + port);
+                
+            }
+            
+            if(path.indexOf("/") != 0) {
+                path = "/"+path;
+            };
+            
+            this.url = "http://" + host + ":" + port + "" + path;
+            this.factory = new ObjectFactory();
+        }
 	
 	/**
 	 * Creates a client request to the host with the given path and data as

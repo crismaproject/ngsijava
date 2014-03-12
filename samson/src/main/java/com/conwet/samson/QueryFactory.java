@@ -22,6 +22,7 @@ package com.conwet.samson;
  * Factory class to instantiate an implementation of {@linkplain QueryBroker}
  * 
  * @author sergio
+ * @author hermanhub
  */
 public class QueryFactory {
 	
@@ -35,5 +36,18 @@ public class QueryFactory {
 	public static QueryBroker newQuerier(String host, int port) {
 		
 		return new Querier(host, port);
+	}
+        
+        /**
+	 * Returns a new instance of {@linkplain QueryBroker}.
+	 * 
+	 * @param host the hostname where the context broker is running
+	 * @param port the port used by the context broker, must be greater than zero
+         * @param path the path to the context broker
+	 * @return the {@linkplain QueryBroker} instantiated
+	 */
+        public static QueryBroker newQuerier(String host, int port, String path) {
+		
+		return new Querier(host, port, path);
 	}
 }
