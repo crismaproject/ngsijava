@@ -4,6 +4,10 @@ ngsijava
 This repository houses the Java library used for implementing NGSI clients mainly for FI-WARE's demos.
 The library has been tested to work against Context Broker 0.6.0 codename Orion.
 
+ngsijava-crisma
+===============
+Project-specific Modifications for the CRISMA FP7 project.
+
 How to compile
 ==============
 
