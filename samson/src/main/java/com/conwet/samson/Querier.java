@@ -21,10 +21,10 @@ package com.conwet.samson;
 import java.util.List;
 import java.util.Objects;
 
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
+//import javax.ws.rs.client.ClientBuilder;
+//import javax.ws.rs.client.Entity;
+//import javax.ws.rs.client.WebTarget;
+//import javax.ws.rs.core.MediaType;
 import javax.xml.datatype.Duration;
 
 import com.conwet.samson.jaxb.BaseContextRequest;
@@ -33,7 +33,6 @@ import com.conwet.samson.jaxb.ContextElement;
 import com.conwet.samson.jaxb.ContextElementList;
 import com.conwet.samson.jaxb.ContextRegistration;
 import com.conwet.samson.jaxb.ContextRegistrationList;
-import com.conwet.samson.jaxb.ContextResponse;
 import com.conwet.samson.jaxb.EntityId;
 import com.conwet.samson.jaxb.EntityIdList;
 import com.conwet.samson.jaxb.NotifyCondition;
@@ -41,6 +40,7 @@ import com.conwet.samson.jaxb.NotifyConditionList;
 import com.conwet.samson.jaxb.NotifyConditionType;
 import com.conwet.samson.jaxb.ObjectFactory;
 import com.conwet.samson.jaxb.QueryContextRequest;
+import com.conwet.samson.jaxb.QueryContextResponse;
 import com.conwet.samson.jaxb.RegisterContextRequest;
 import com.conwet.samson.jaxb.RegisterContextResponse;
 import com.conwet.samson.jaxb.SubscribeContextRequest;
@@ -48,8 +48,14 @@ import com.conwet.samson.jaxb.SubscribeContextResponse;
 import com.conwet.samson.jaxb.SubscribeResponse;
 import com.conwet.samson.jaxb.UpdateActionType;
 import com.conwet.samson.jaxb.UpdateContextRequest;
+import com.conwet.samson.jaxb.UpdateContextResponse;
 import com.conwet.samson.jaxb.UpdateContextSubscriptionRequest;
 import com.conwet.samson.jaxb.UpdateContextSubscriptionResponse;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource;
+import javax.ws.rs.core.MediaType;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 
 /**
  * This class execute queries to Context Broker and unmarshal its XML response
@@ -59,7 +65,7 @@ import com.conwet.samson.jaxb.UpdateContextSubscriptionResponse;
  */
 public class Querier implements QueryBroker {
 	
-	private static final String QUERY = "/ngsi10/queryContext";
+	private static final String QUERY = "/orion/NGSI10/queryContext";
 	private static final String REGISTER = "/ngsi9/registerContext";
 	private static final String UPDATE = "/ngsi10/updateContext";
 	private static final String SUBSCRIBE = "/ngsi10/subscribeContext";
@@ -107,9 +113,17 @@ public class Querier implements QueryBroker {
 	 */
 	private <E, T> T response(String path, E data, Class<T> clazz) throws Exception {
 		
-		WebTarget target = ClientBuilder.newClient().target(url).path(path);
-		T response = target.request(MediaType.APPLICATION_XML)
-							.post(Entity.xml(data), clazz);
+		
+            Client client = new Client();
+ 
+		WebResource webResource = client.resource(url+path);
+                
+       
+            
+                System.out.println(data);
+                
+                
+                T response = webResource.type(MediaType.APPLICATION_XML).post(clazz, data);
 		
 		return response;
 	}
@@ -126,7 +140,7 @@ public class Querier implements QueryBroker {
 	}
 	
 	@Override
-	public ContextResponse queryContext(EntityId entityId) throws Exception {
+	public QueryContextResponse queryContext(EntityId entityId) throws Exception {
 		
 		EntityIdList list = factory.createEntityIdList();
 		list.getEntityId().add(entityId);
@@ -134,7 +148,7 @@ public class Querier implements QueryBroker {
 		QueryContextRequest request = new QueryContextRequest();
 		request.setEntityIdList(list);
 		
-		return response(QUERY, request, ContextResponse.class);
+		return response(QUERY, request, QueryContextResponse.class);
 	}
 	
 	@Override
@@ -151,7 +165,7 @@ public class Querier implements QueryBroker {
 	}
 	
 	@Override
-	public ContextResponse updateContext(ContextElement cxtElem, UpdateActionType action) throws Exception {
+	public UpdateContextResponse updateContext(ContextElement cxtElem, UpdateActionType action) throws Exception {
 		
 		ContextElementList list = factory.createContextElementList();
 		list.getContextElement().add(cxtElem);
@@ -160,7 +174,7 @@ public class Querier implements QueryBroker {
 		request.setContextElementList(list);
 		request.setUpdateAction(action);
 		
-		return response(UPDATE, request, ContextResponse.class);
+		return response(UPDATE, request, UpdateContextResponse.class);
 	}
 	
 	@Override
